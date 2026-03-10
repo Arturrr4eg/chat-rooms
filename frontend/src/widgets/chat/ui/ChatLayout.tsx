@@ -13,12 +13,17 @@ export function ChatLayout() {
 
   const wsClient = useChatSocket();
 
+  const handleLeaveRoom = () => {
+    wsClient?.send({ type: "leave_room" });
+    leaveRoom();
+  };
+
   return (
     <div className="mx-auto max-w-5xl space-y-4">
-      <Card className="p-3 flex items-center justify-between">
+      <Card className="p-3 flex items-center justify-between shadow-lg border-border/70 bg-card/90 backdrop-blur animate-fade-up">
         <div className="space-y-0.5">
           <div className="text-sm text-muted-foreground">
-            {user ? `Signed in as: ${user.email}` : "Signed in"}
+            {user ? `Signed in as: ${user.username}` : "Signed in"}
           </div>
 
           <div className="text-sm text-muted-foreground">
@@ -28,7 +33,7 @@ export function ChatLayout() {
 
         <div className="flex gap-2">
           {currentRoom && (
-            <Button type="button" variant="outline" onClick={leaveRoom}>
+            <Button type="button" variant="outline" onClick={handleLeaveRoom}>
               Leave room
             </Button>
           )}
@@ -40,8 +45,12 @@ export function ChatLayout() {
       </Card>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-[320px_1fr]">
-        <RoomsSidebar />
-        <ChatPanel wsClient={wsClient} />
+        <div className="animate-fade-up [animation-delay:90ms]">
+          <RoomsSidebar />
+        </div>
+        <div className="animate-fade-up [animation-delay:140ms]">
+          <ChatPanel wsClient={wsClient} />
+        </div>
       </div>
     </div>
   );

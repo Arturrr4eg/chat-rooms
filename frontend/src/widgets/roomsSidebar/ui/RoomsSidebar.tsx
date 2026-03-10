@@ -26,7 +26,7 @@ export function RoomsSidebar() {
   };
 
   return (
-    <Card className="p-4 space-y-4">
+    <Card className="p-4 space-y-4 shadow-md border-border/70 bg-card/90 backdrop-blur">
       <div className="space-y-1">
         <h2 className="text-lg font-semibold">Rooms</h2>
         <p className="text-sm text-muted-foreground">Choose a room to chat</p>
@@ -59,21 +59,32 @@ export function RoomsSidebar() {
 
       {roomsQuery.data && (
         <ul className="space-y-2">
-          {roomsQuery.data.map((r) => {
+          {roomsQuery.data.map((r, index) => {
             const isActive = r.id === currentRoom?.id;
 
             return (
-              <li key={r.id}>
+              <li
+                key={r.id}
+                className="animate-fade-up"
+                style={{ animationDelay: `${Math.min(index * 45, 260)}ms` }}
+              >
                 <button
                   type="button"
                   onClick={() => setCurrentRoom(r)}
-                  className={`w-full text-left rounded-md border px-3 py-2 transition-colors ${
+                  className={`w-full text-left rounded-md border px-3 py-2 transition-all duration-200 hover:-translate-y-[1px] ${
                     isActive
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-background border-border hover:bg-muted"
+                      ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                      : "bg-background border-border hover:bg-muted hover:shadow-sm"
                   }`}
                 >
                   <div className="font-medium">{r.name}</div>
+                  <div
+                    className={`text-xs mt-1 ${
+                      isActive ? "text-primary-foreground/80" : "text-muted-foreground"
+                    }`}
+                  >
+                    Created by: {r.createdBy}
+                  </div>
                 </button>
               </li>
             );

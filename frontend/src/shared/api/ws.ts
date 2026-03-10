@@ -2,7 +2,7 @@ export interface ChatMessage {
   id: string;
   roomId: string;
   text: string;
-  senderEmail: string;
+  senderUsername: string;
   createdAt: string;
 }
 
@@ -13,7 +13,8 @@ export type WsIncoming =
 
 export type WsOutgoing =
   | { type: "get_room_messages"; payload: { roomId: string } }
-  | { type: "send_message"; payload: { roomId: string; text: string } };
+  | { type: "send_message"; payload: { roomId: string; text: string } }
+  | { type: "leave_room" };
 
 type Listener = (data: WsIncoming) => void;
 
@@ -35,6 +36,7 @@ export function createWsClient(url: string, token: string): WsClient {
       const parsed = JSON.parse(event.data) as WsIncoming;
       listeners.forEach((l) => l(parsed));
     } catch {
+      return;
     }
   });
 
